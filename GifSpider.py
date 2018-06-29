@@ -2,6 +2,7 @@ import requests
 import time
 import os
 import threading
+import re
 from bs4 import BeautifulSoup
 
 n = 0
@@ -37,30 +38,29 @@ class DownloadGif(threading.Thread):
                             for src in tag_img:
                                 url_img = str(src.get('src'))
                                 if url_img.endswith('.gif'):
-                                    # noinspection PyBroadException
-                                    try:
+                                    if re.match(r'^https?:/{2}\w.+$', url_img):
                                         time_start = time.time()
                                         response_img = requests.get(url=url_img, headers=my_headers)
                                         time_end = time.time()
-                                    except Exception:
-                                        continue
-                                    else:
+                                        time_used = time_end - time_start
                                         if response_img.status_code == 200:
-                                            info = url_p, url_img, '下载完成', '耗时', time_end - time_start
-                                            print(info)
+                                            info_one = url_p, url_img, '下载完成', '耗时', str(time_used)
+                                            print(info_one)
                                             name = path + str(n) + '.gif'
+                                            content_one = str(info_one) + '\n' + name + '\n'
                                             with open(name, 'wb') as gif:
                                                 gif.write(response_img.content)
                                             with open(path + "log.txt", 'a') as log:
-                                                new_content = str(info) + '\n' + name + '\n'
-                                                log.write(new_content)
+                                                log.write(content_one)
                                             print(name, '写入完成')
                                             n = n + 1
                                             print('当前线程数量', threading.active_count())
                                         else:
-                                            print(url_img, '文件失效')
+                                            info_tow = url_p, url_img, '文件失效'
+                                            print(info_tow)
                                 else:
-                                    print(url_img, '未找到GIF')
+                                    info_three = url_p, url_img, '未找到GIF'
+                                    print(info_three)
 
 
 class Task:
@@ -79,5 +79,5 @@ class Task:
 
 
 if __name__ == '__main__':
-    T = Task(550, 100)
+    T = Task(550, 10)
     T.start()
