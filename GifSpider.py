@@ -6,6 +6,7 @@ import re
 from bs4 import BeautifulSoup
 
 n = 0
+lock = threading.Lock()
 
 path = 'D:\\gif_full\\'
 if not (os.path.exists(path)):
@@ -49,6 +50,7 @@ class DownloadGif(threading.Thread):
                                     time_end = time.time()
                                     time_used = time_end - time_start
                                     if response_img.status_code == 200:
+                                        lock.acquire()
                                         name = path + str(n) + '.gif'
                                         with open(name, 'wb') as gif:
                                             gif.write(response_img.content)
@@ -58,6 +60,7 @@ class DownloadGif(threading.Thread):
                                         print(info_one)
                                         n = n + 1
                                         print('当前线程数量', threading.active_count())
+                                        lock.release()
                                     else:
                                         info_tow = p, url_img, '文件失效'
                                         print(info_tow)
