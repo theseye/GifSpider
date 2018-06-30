@@ -58,9 +58,21 @@ class DownloadGif(threading.Thread):
                                         else:
                                             info_tow = url_p, url_img, '文件失效'
                                             print(info_tow)
+                                    else:
+                                        info_three = url_p, url_img, 'URL格式错误'
+                                        print(info_three)
                                 else:
-                                    info_three = url_p, url_img, '未找到GIF'
-                                    print(info_three)
+                                    info_four = url_p, url_img, '未找到GIF'
+                                    print(info_four)
+                        else:
+                            info_five = url_p, '失去响应'
+                            print(info_five)
+                    else:
+                        info_six = tag_href, '不是正确的链接'
+                        print(info_six)
+            else:
+                info_seven = main_index, '失去响应'
+                print(info_seven)
 
 
 class Task:
