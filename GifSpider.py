@@ -23,26 +23,25 @@ class DownloadGif(threading.Thread):
         self.parameter = parameter
 
     def run(self):
-        url_p = set()
-        global n
         for index in self.parameter:
-            main_index = 'http://siji.party/?cate=all&page=' + str(index)
-            response_main = requests.get(main_index)
+            main_page = 'http://siji.party/?cate=all&page=' + str(index)
+            response_main = requests.get(main_page)
             if response_main.status_code == 200:
                 tag_a = BeautifulSoup(response_main.content, 'html.parser').select('a')
-                for href in tag_a:
-                    tag_href = str(href.get('href'))
+                url_p = set()
+                for a in tag_a:
+                    tag_href = str(a.get('href'))
                     if '/p/' in tag_href:
                         url_p.add('http://siji.party' + tag_href)
                     else:
-                        info_six = tag_href, '不是正确的链接'
-                        print(info_six)
+                        info_one = tag_href, '不是正确的链接'
+                        print(info_one)
                 for p in url_p:
                     response_p = requests.get(url=p, headers=my_headers)
                     if response_p.status_code == 200:
                         tag_img = BeautifulSoup(response_p.content, 'html.parser').select('img')
-                        for src in tag_img:
-                            url_img = str(src.get('src'))
+                        for img in tag_img:
+                            url_img = str(img.get('src'))
                             if url_img.endswith('.gif'):
                                 if re.match(r'^https?:/{2}\w.+$', url_img):
                                     time_start = time.time()
@@ -51,30 +50,31 @@ class DownloadGif(threading.Thread):
                                     time_used = time_end - time_start
                                     if response_img.status_code == 200:
                                         lock.acquire()
+                                        global n
                                         name = path + str(n) + '.gif'
                                         with open(name, 'wb') as gif:
                                             gif.write(response_img.content)
-                                        info_one = main_index, p, url_img, '下载完成', '耗时', time_used, name, '写入完成'
+                                        info_two = main_page, p, url_img, '下载完成', '耗时', time_used, name, '写入完成'
                                         with open(path + "!log.txt", 'a') as log:
-                                            log.write(str(info_one) + '\r\n')
-                                        print(info_one)
-                                        n = n + 1
+                                            log.write(str(info_two) + '\r\n')
+                                        print(info_two)
                                         print('当前线程数量', threading.active_count())
+                                        n = n + 1
                                         lock.release()
                                     else:
-                                        info_tow = p, url_img, '文件失效'
-                                        print(info_tow)
+                                        info_three = p, url_img, '文件失效'
+                                        print(info_three)
                                 else:
-                                    info_three = p, url_img, 'URL格式错误'
-                                    print(info_three)
+                                    info_four = p, url_img, 'URL格式错误'
+                                    print(info_four)
                             else:
-                                info_four = p, url_img, '未找到GIF'
-                                print(info_four)
+                                info_five = p, url_img, '未找到GIF'
+                                print(info_five)
                     else:
-                        info_five = p, '失去响应'
-                        print(info_five)
+                        info_six = p, '失去响应'
+                        print(info_six)
             else:
-                info_seven = main_index, '失去响应'
+                info_seven = main_page, '失去响应'
                 print(info_seven)
 
 
