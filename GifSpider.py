@@ -94,5 +94,5 @@ class Task:
 
 
 if __name__ == '__main__':
-    T = Task(550, 100)
+    T = Task(550, 10)
     T.start()
