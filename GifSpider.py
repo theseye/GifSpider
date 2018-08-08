@@ -104,7 +104,7 @@ if __name__ == '__main__':
 # from bs4 import BeautifulSoup
 # import os
 # 
-# path = 'D:\\wangying_blog\\'
+# path = 'D:\\WangYin_blog\\'
 # if not (os.path.exists(path)):
 #     os.makedirs(path)
 # 
