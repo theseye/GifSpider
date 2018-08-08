@@ -96,3 +96,23 @@ class Task:
 if __name__ == '__main__':
     T = Task(550, 100)
     T.start()
+    
+    
+    
+# # 爬取wangyin的博客内容
+# import requests
+# from bs4 import BeautifulSoup
+# import os
+# 
+# path = 'D:\\wangying_blog\\'
+# if not (os.path.exists(path)):
+#     os.makedirs(path)
+# 
+# response_index = requests.get('http://henix.github.io/feeds/yinwang/')
+# tag_li = BeautifulSoup(response_index.content, 'html.parser').select('li')
+# for li in tag_li:
+#     tag_a = li.select('a')
+#     for a in tag_a:
+#         response_page = requests.get('http://henix.github.io/feeds/yinwang/' + a.get('href'))
+#         with open(path + a.text + '.html', 'wb') as html:
+#             html.write(response_page.content)
